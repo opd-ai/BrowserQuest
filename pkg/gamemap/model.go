@@ -1,12 +1,15 @@
 package gamemap
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Map struct {
 	Width          int               `json:"width"`
 	Height         int               `json:"height"`
 	TileSize       int               `json:"tilesize"`
-	Data           []int             `json:"data,omitempty"`
+	Data           []TileStack       `json:"data,omitempty"`
 	High           []int             `json:"high,omitempty"`
 	Collisions     []int             `json:"collisions,omitempty"`
 	Blocking       []int             `json:"blocking,omitempty"`
@@ -91,4 +94,28 @@ func (m *Map) Validate() error {
 		return fmt.Errorf("invalid tile size %d", m.TileSize)
 	}
 	return nil
+}
+
+type TileStack []int
+
+func (t *TileStack) UnmarshalJSON(data []byte) error {
+	var single int
+	if err := json.Unmarshal(data, &single); err == nil {
+		*t = TileStack{single}
+		return nil
+	}
+
+	var multi []int
+	if err := json.Unmarshal(data, &multi); err != nil {
+		return err
+	}
+	*t = TileStack(multi)
+	return nil
+}
+
+func (t TileStack) MarshalJSON() ([]byte, error) {
+	if len(t) == 1 {
+		return json.Marshal(t[0])
+	}
+	return json.Marshal([]int(t))
 }
