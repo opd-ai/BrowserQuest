@@ -1,0 +1,8 @@
+BrowserQuest was created by Little Workshop.
+
+Credits retained to:
+- Franck Lecollinet
+- Guillaume Lecollinet
+
+Code is licensed under MPL 2.0.
+Content is licensed under CC-BY-SA 3.0.
